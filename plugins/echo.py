@@ -30,27 +30,3 @@ def challenge(session: MessageSession):
         temperature+"°C - humidity: "+
         humidity+"%"
     )
-
-blast_loop = []
-@cs_bot.on_prefix(["blast"], permission = ANYONE)
-def blast_something(session: MessageSession):
-    blast_loop.append(cs_bot.every(5).seconds.do(blast))
-    # for email in session.message.content.lstrip("blast").split(","):
-    
-
-def blast():
-    seabot = SeaTalkOpenAPIClient(os.environ["APP_ID"],
-        os.environ["APP_SECRET"],
-        os.environ["SIGNING_SECRET"]
-    )
-    emails = ["aaron.tanjaya@shopee.com", "william.ciptono@shopee.com"]
-    employee_code =seabot.get_employee_code_with_email(emails)
-
-    for val in employee_code.values():
-        seabot.send_single_chat_message(val, "test schedule")
-
-is_blast = False
-@cs_bot.on_prefix(["stop"], permission = ANYONE)
-def stop_blast(session: MessageSession):
-    cs_bot.cancel_job(blast_loop[0])
-    blast_loop.pop()
